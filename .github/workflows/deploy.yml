@@ -1,0 +1,98 @@
+name: AWS S3 bucket deployment
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+
+jobs:
+  deploy-frontend:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache frontend files
+        id: cache-frontend
+        uses: actions/cache@v4
+        env: 
+          cache-name: cache-frontend-files
+        with:
+          path: frontend/
+          key: ${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*') }}
+
+      - if: ${{ steps.cache-frontend.outputs.cache-hit == 'true' }}
+        name: Check frontend changes
+        continue-on-error: true
+        run: echo 'No frontend changes found. Skip frontend build and deployment.'
+
+      - if: ${{ steps.cache-frontend.outputs.cache-hit != 'true' }}
+        env: 
+          REACT_APP_API_URL: ${{vars.REACT_APP_API_URL}}
+          REACT_APP_APIGATEWAY_KEY: ${{secrets.REACT_APP_APIGATEWAY_KEY }}
+
+        name: Build
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - if: ${{ steps.cache-frontend.outputs.cache-hit != 'true' }}
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{vars.AWS_REGION}}
+
+      - if: ${{ steps.cache-frontend.outputs.cache-hit != 'true' }}
+        name: Deploy to S3
+        run: aws s3 sync frontend/build s3://${{vars.AWS_S3_BUCKET_NAME }} --delete
+
+  deploy-api:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache api files
+        id: cache-api
+        uses: actions/cache@v4
+        env: 
+          cache-name: cache-api-files
+        with:
+          path: api/
+          key: ${{ hashFiles('api/lambdas/package-lock.json') }}-${{ hashFiles('api/lambdas/src/**/*') }}
+
+      - if: ${{ steps.cache-api.outputs.cache-hit == 'true' }}
+        name: Check api changes
+        continue-on-error: true
+        run: echo 'No api changes found. Skip api build and deployment.'
+
+      - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
+        name: Build lambdas
+        run: |
+          cd api/lambdas
+          npm ci
+          npm run build
+
+      - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{vars.AWS_REGION}}
+
+      - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
+        name: Deploy lambda main api
+        run: |
+          cd api/lambdas/build/lambda-api/
+          zip -r lambda-main-api.zip . -i '*.js'
+          aws lambda update-function-code --function-name ${{vars.LAMBDA_MAIN_API_ARN}} --zip-file fileb://lambda-main-api.zip
+

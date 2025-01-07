@@ -1,11 +1,14 @@
-import { Handler } from 'aws-cdk-lib/aws-lambda';
-
+// any name
 export const projectName = 'zeroblog';
-export const frontendBucketName = `${projectName}-frontend`;
-export const userDeploerName = `${projectName}-deployer`;
+
+// define your registered domain
 export const domainName = 'for-test.click';
+
+// these resources will be created automatically
 export const subDomainNameFrontend = 'blog.for-test.click';
 export const subDomainNameApi = 'api.blog.for-test.click';
+export const frontendBucketName = `${projectName}-frontend`;
+export const userDeploerName = `${projectName}-deployer`;
 export const websiteIndexDocument = 'index.html';
 export const allowOrigins = [
   'http://blog.for-test.click',
@@ -13,6 +16,7 @@ export const allowOrigins = [
   'http://localhost:3000',
 ];
 
+// you can leave this unchanged
 export const LAMBDAS: Record<
   'api' | 'layerNodeModules',
   { path: string; handler: string }
