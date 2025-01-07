@@ -7,7 +7,6 @@ export const domainName = 'for-test.click';
 // these resources will be created automatically
 export const subDomainNameFrontend = 'blog.for-test.click';
 export const subDomainNameApi = 'api.blog.for-test.click';
-export const frontendBucketName = `${projectName}-frontend`;
 export const userDeploerName = `${projectName}-deployer`;
 export const websiteIndexDocument = 'index.html';
 export const allowOrigins = [

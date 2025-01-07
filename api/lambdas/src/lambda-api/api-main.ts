@@ -23,7 +23,7 @@ import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
 
 console.log(process.env.AWS_REGION);
 console.log(process.env.DYNAMODB_ENDPOINT);
-console.log(process.env.ZEROBLOG_TABLE_NAME);
+console.log(process.env.MAIN_TABLE_NAME);
 
 // access credentials need only for local dynamodb. Remote Prod works using IAM permissions which are defined in the cdk.
 const dynamoDBClientConfig: DynamoDBClientConfig =
@@ -43,7 +43,7 @@ const documentClient = new DocumentClientV3(
 );
 
 const dbConnection = createConnection({
-  table: mainTable({ tableName: process.env.ZEROBLOG_TABLE_NAME! }),
+  table: mainTable({ tableName: process.env.MAIN_TABLE_NAME! }),
   entities: [Article, Section],
   documentClient,
 });

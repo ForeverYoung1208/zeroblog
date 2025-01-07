@@ -73,13 +73,16 @@ cdk synth --profile zeroblog
 ```bash
 cdk deploy --profile zeroblog
 ```
-after deploymend you'll see several output values. 
+then you'll see several output values. 
 
-### Find value of ZeroblogStack.UserdeployerName 
-and remember it (by defuault it will be zeroblog-deployer)
+Find value of ZeroblogStack.UserdeployerName and remember it (by defuault it will be zeroblog-
+deployer)
 
-### Find value of ZeroblogStack.apiKeyId 
-and use this value in the command 
+Find value of ZeroblogStack.LambdaLayerName and remember it 
+
+Find value of ZeroblogStack.lambdaFnApiArn and remember it (will be something like arn:aws:lambda:eu-central-1:652460108554:function:ZeroblogStack-lambdaFnApi0E02146C-fvY4vVZhKfH7)
+
+Find value of ZeroblogStack.apiKeyId and use this value in the command 
 
 ```bash
 aws apigateway get-api-key --api-key <<key_id_from_cdk_deploy_output>> --include-value --query value --output text
@@ -96,16 +99,17 @@ This user will be used at the Github Actions to deploy code.
 
 set secrets
 `REACT_APP_APIGATEWAY_KEY` - the key you've retrieved before with command `aws apigateway get-api-key --api-key <<key_id_from_cdk_deploy_output>> --include-value --query value --output text ` or at the aws API Gateway console 
-`AWS_ACCESS_KEY_ID` - key id for this app that you must get at the aws console IAM Security credentials
-`AWS_SECRET_ACCESS_KEY` - secret key value for this app that you must get at the aws console IAM Security credentials
+`AWS_ACCESS_KEY_ID` - key id for user zeroblog-deployer
+`AWS_SECRET_ACCESS_KEY` - secret key value for user zeroblog-deployer
 
 and variables
 `AWS_REGION` - the region where athe app will be deployed at
-`AWS_S3_BUCKET_NAME` - bucket name to deploy frontend. (Must be the same as 'frontendBucketName' in infra/cdk/lib/const.ts) 
-`REACT_APP_API_URL` - url of the api (Must be 'https://..... subdomain like 'subDomainNameApi' in infra/cdk/lib/const.ts)
-`LAMBDA_MAIN_ARN` - arn of the main lambda function.
+`AWS_S3_BUCKET_NAME` - bucket name to deploy frontend. (Must be the same as 'subDomainNameFrontend' in infra/cdk/lib/const.ts) 
+`REACT_APP_API_URL` - url of the api (Must be like 'https://api.blog.for-test.click', use subDomainNameApi from infra/cdk/lib/const.ts)
+`LAMBDA_MAIN_API_ARN` - arn of the main lambda function (lambdaFnApiArn you've got from output before).
+`LAMBDA_LAYER_NAME` - arn of the main lambda function (LambdaLayerName you've got from output before)
 
-Now you can deploy by merging feature branches to the master branch leveraging github actions workflows
+Now you can deploy api and frontend code by merging feature branches to the master branch leveraging github actions workflows
 
 # USEFUL INFO
 ## get the list of  availabe aurora serverless DB engines

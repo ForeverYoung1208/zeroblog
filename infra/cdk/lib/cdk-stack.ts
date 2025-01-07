@@ -12,7 +12,6 @@ import { Construct } from 'constructs';
 import {
   allowOrigins,
   domainName,
-  frontendBucketName,
   LAMBDAS,
   projectName,
   subDomainNameApi,
@@ -50,19 +49,23 @@ export class MyStack extends cdk.Stack {
      */
 
     // Bucket for storing frontend code
-    const bucketForFrontend = new s3.Bucket(this, frontendBucketName, {
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-      bucketName: subDomainNameFrontend,
-      autoDeleteObjects: true,
-      blockPublicAccess: {
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
+    const bucketForFrontend = new s3.Bucket(
+      this,
+      `${projectName}FrontendBucket`,
+      {
+        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        bucketName: subDomainNameFrontend,
+        autoDeleteObjects: true,
+        blockPublicAccess: {
+          blockPublicAcls: false,
+          blockPublicPolicy: false,
+          ignorePublicAcls: false,
+          restrictPublicBuckets: false,
+        },
+        cors: [{ allowedMethods: [s3.HttpMethods.GET], allowedOrigins: ['*'] }],
+        websiteIndexDocument: websiteIndexDocument,
       },
-      cors: [{ allowedMethods: [s3.HttpMethods.GET], allowedOrigins: ['*'] }],
-      websiteIndexDocument: websiteIndexDocument,
-    });
+    );
 
     bucketForFrontend.addToResourcePolicy(
       new iam.PolicyStatement({
@@ -282,6 +285,9 @@ export class MyStack extends cdk.Stack {
     });
     new cdk.CfnOutput(this, 'lambdaFnApi Arn', {
       value: lambdaFnApi.functionArn,
+    });
+    new cdk.CfnOutput(this, 'Lambda Layer Name', {
+      value: nodeModulesLayer.layerVersionArn,
     });
     new cdk.CfnOutput(this, 'User deployer Name', {
       value: userDeploer.userName,
