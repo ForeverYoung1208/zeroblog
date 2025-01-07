@@ -112,6 +112,7 @@ Now you can deploy api and frontend code by merging feature branches to the mast
 
 ## deploy code using aws cdk
 You still able to deploy code using cws cdk, for example to rebuild api and lambda layer containing node_modules (if you need to update packages) and redeploy all changes, do:
+Note: not forget to set relevant env variables values at the respected .env files (for backend and frontend)
 
 bash at api/src/lambda-api
 ```bash

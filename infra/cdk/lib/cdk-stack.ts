@@ -139,6 +139,7 @@ export class MyStack extends cdk.Stack {
 
     // Lambda functions - main api
     const lambdaFnApi = new lambda.Function(this, `lambdaFnApi`, {
+      functionName: `${projectName}-main-api-lambda`,
       code: lambda.AssetCode.fromAsset(LAMBDAS.api.path),
       layers: [nodeModulesLayer],
       runtime: lambda.Runtime.NODEJS_20_X,
