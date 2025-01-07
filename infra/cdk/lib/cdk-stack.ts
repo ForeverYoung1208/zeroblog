@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
@@ -66,6 +67,12 @@ export class MyStack extends cdk.Stack {
         websiteIndexDocument: websiteIndexDocument,
       },
     );
+
+    new s3deploy.BucketDeployment(this, `${projectName}FrontendDeployment`, {
+      sources: [s3deploy.Source.asset('../../frontend/build')],
+      destinationBucket: bucketForFrontend,
+      prune: true,
+    });
 
     bucketForFrontend.addToResourcePolicy(
       new iam.PolicyStatement({
