@@ -22,16 +22,17 @@ npm i -g aws-cdk-lib
 npm i -g aws-cdk 
 ```
 
+## then cd to infra/cdk 
+```bash
+cd infra/cdk/
+```
+
 ## then (once)  if deploing to a new aws account/zone bootstrap cdk for that account:
 ```bash
 cdk bootstrap --profile zeroblog
 ```
 it will create necessary roles in your aws account/zone  (CloudFormationExecutionRole, ...etc)
 
-## then cd to infra/cdk 
-```bash
-cd infra/cdk
-```
 
 ### Compile ts code
 ```bash
@@ -66,19 +67,6 @@ and variables
 `LAMBDA_MAIN_ARN` - arn of the main lambda function.
 
 Now you can deploy by merging to github master leveraging github actions workflows
-
-<!--
-## Outdated - How to make a new deployment using only cloudformation
-<!-- ## first, get aws cli and configure aws profile
-```shell
-aws configure --profile zeroblog
-```
-
-## then create cloudformation stack
-```shell
-./infra/cloudformation/deploy-runner.sh update <cloud-formation-stack-name>
-``` -->
-
 
 # USEFUL INFO
 ## get the list of  availabe aurora serverless DB engines

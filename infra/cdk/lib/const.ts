@@ -3,10 +3,15 @@ import { Handler } from 'aws-cdk-lib/aws-lambda';
 export const projectName = 'zeroblog';
 export const frontendBucketName = `${projectName}-frontend`;
 export const userDeploerName = `${projectName}-deployer`;
-export const domainName = 'lublin.life';
-export const subDomainNameFrontend = 'ukr.lublin.life';
-export const subDomainNameApi = 'api.ukr.lublin.life';
+export const domainName = 'for-test.click';
+export const subDomainNameFrontend = 'blog.for-test.click';
+export const subDomainNameApi = 'api.blog.for-test.click';
 export const websiteIndexDocument = 'index.html';
+export const allowOrigins = [
+  'http://blog.for-test.click',
+  'https://blog.for-test.click',
+  'http://localhost:3000',
+];
 
 export const LAMBDAS: Record<
   'api' | 'layerNodeModules',

@@ -1,9 +1,9 @@
 import { INDEX_TYPE, Table } from '@typedorm/common';
 
-type TGuidebookTableParams = { tableName: string };
+type TMainParams = { tableName: string };
 
-const zeroblogTable = ({ tableName }: TGuidebookTableParams) => {
-  console.log('[zeroblogTable]', tableName);
+const mainTable = ({ tableName }: TMainParams) => {
+  console.log('[mainTable]', tableName);
   return new Table({
     name: tableName,
     partitionKey: 'PK',
@@ -21,4 +21,4 @@ const zeroblogTable = ({ tableName }: TGuidebookTableParams) => {
   });
 };
 
-export { zeroblogTable };
+export { mainTable };

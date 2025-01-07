@@ -7,7 +7,7 @@
     "accept-encoding": "gzip, deflate, br, zstd",
     "accept-language": "uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7,pl;q=0.6",
     "cache-control": "max-age=0",
-    "Host": "api.ukr.lublin.life",
+    "Host": "api.blog.for-test.click",
     "priority": "u=0, i",
     "sec-ch-ua": "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\"",
     "sec-ch-ua-mobile": "?0",
@@ -31,7 +31,7 @@
     "accept-encoding": ["gzip, deflate, br, zstd"],
     "accept-language": ["uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7,pl;q=0.6"],
     "cache-control": ["max-age=0"],
-    "Host": ["api.ukr.lublin.life"],
+    "Host": ["api.blog.for-test.click"],
     "priority": ["u=0, i"],
     "sec-ch-ua": [
       "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\""
@@ -84,7 +84,7 @@
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
       "user": null
     },
-    "domainName": "api.ukr.lublin.life",
+    "domainName": "api.blog.for-test.click",
     "deploymentId": "au65je",
     "apiId": "s21l7h9vn4"
   },

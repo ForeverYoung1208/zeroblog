@@ -9,7 +9,7 @@ export function P2(){
         <Box>   
             <button onClick={BackButtonHandler}>Back</button>
             <Box className="P2" style={{fontSize:"40px"}}>
-                <h1>торгівельні центри та магазини</h1>
+                <h1>Page2 content</h1>
             </Box>
         </Box>
     );

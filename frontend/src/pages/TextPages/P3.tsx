@@ -9,7 +9,7 @@ export function P3(){
         <Box>   
             <button onClick={BackButtonHandler}>Back</button>
             <Box className="P3" style={{fontSize:"40px"}}>
-                <h1>пам’ятки та цікавинки</h1>
+                <h1>Page3 Content</h1>
             </Box>
         </Box>
     );

@@ -10,6 +10,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 import { Construct } from 'constructs';
 import {
+  allowOrigins,
   domainName,
   frontendBucketName,
   LAMBDAS,
@@ -19,7 +20,7 @@ import {
   userDeploerName,
   websiteIndexDocument,
 } from './const';
-import { GuidebookDynamoDbTable } from './db-tables/zeroblog-table';
+import { MainDynamoDbTable } from './db-tables/main-table';
 
 export class MyStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -33,8 +34,8 @@ export class MyStack extends cdk.Stack {
     // Create a secret. Used before to store API key - now it is not needed (rely on api gateway key)
     // Leave as example how to store any other secrets as json when needed.
     const appSecrets = new secretsmanager.Secret(this, 'SomeSecretExample', {
-      secretName: 'sectrestsForGuidebook',
-      description: 'Secrets for Guidebook API v2',
+      secretName: `${projectName}Sectrests`,
+      description: `Secrets for ${projectName}`,
       generateSecretString: {
         secretStringTemplate: JSON.stringify({}),
         passwordLength: 40,
@@ -77,13 +78,8 @@ export class MyStack extends cdk.Stack {
      *  BACKEND
      */
 
-    // // Use the default VPC - not needed for now. Leave as exaple how to get default VPC
-    // const vpc = ec2.Vpc.fromLookup(this, 'VPC', {
-    //   isDefault: true,
-    // });
-
     // Database
-    const zeroblogTable = new GuidebookDynamoDbTable(this);
+    const mainTable = new MainDynamoDbTable(this);
 
     // Lambda functions
     const lambdaCommonRole = new iam.Role(this, `${projectName}-lambdarole`, {
@@ -139,23 +135,19 @@ export class MyStack extends cdk.Stack {
       handler: LAMBDAS.api.handler,
       role: lambdaCommonRole,
       environment: {
-        ZEROBLOG_TABLE_NAME: zeroblogTable.table.tableName,
+        MAIN_TABLE_NAME: mainTable.table.tableName,
         SECRETS_ARN: appSecrets.secretArn,
       },
     });
 
     // ApiGateway
 
-    const api = new apigateway.LambdaRestApi(this, 'zeroblog-main-api', {
+    const api = new apigateway.LambdaRestApi(this, `${projectName}-main-api`, {
       handler: lambdaFnApi,
       proxy: true,
       endpointTypes: [apigateway.EndpointType.REGIONAL],
       defaultCorsPreflightOptions: {
-        allowOrigins: [
-          'http://ukr.lublin.life',
-          'https://ukr.lublin.life',
-          'http://localhost:3000',
-        ],
+        allowOrigins,
         allowMethods: apigateway.Cors.ALL_METHODS,
         allowHeaders: [
           'Content-Type',
@@ -178,16 +170,20 @@ export class MyStack extends cdk.Stack {
     // Create API key for API Gateway
     const apiGatewayKey = new apigateway.ApiKey(
       this,
-      'GuidebookApiGatewayKey',
+      `${projectName}ApiGatewayKey`,
       {
-        apiKeyName: 'zeroblog-apigateway-key',
+        apiKeyName: `${projectName}-apigateway-key`,
       },
     );
 
     // Create a usage plan
-    const usagePlan = new apigateway.UsagePlan(this, 'GuidebookUsagePlan', {
-      name: 'zeroblog-usage-plan',
-    });
+    const usagePlan = new apigateway.UsagePlan(
+      this,
+      `${projectName}UsagePlan`,
+      {
+        name: `${projectName}-usage-plan`,
+      },
+    );
 
     // Add the API stage to the usage plan
     usagePlan.addApiStage({
@@ -220,14 +216,14 @@ export class MyStack extends cdk.Stack {
       }),
     );
 
-    zeroblogTable.table.grantFullAccess(lambdaFnApi);
+    mainTable.table.grantFullAccess(lambdaFnApi);
 
     /**
      *  HOSTING
      */
 
     //Lookup the zone based on domain name
-    const zone = route53.HostedZone.fromLookup(this, 'lublinlifeZone', {
+    const zone = route53.HostedZone.fromLookup(this, `${projectName}Zone`, {
       domainName: domainName,
     });
 
@@ -253,16 +249,20 @@ export class MyStack extends cdk.Stack {
     });
 
     //Add frontend subdomain to Route53
-    const cNameFront = new route53.ARecord(this, 'ukrLublinlifeSubdomain', {
-      zone: zone,
-      recordName: subDomainNameFrontend,
-      target: route53.RecordTarget.fromAlias(
-        new targets.BucketWebsiteTarget(bucketForFrontend),
-      ),
-    });
+    const cNameFront = new route53.ARecord(
+      this,
+      `${projectName}FrontendDomain`,
+      {
+        zone: zone,
+        recordName: subDomainNameFrontend,
+        target: route53.RecordTarget.fromAlias(
+          new targets.BucketWebsiteTarget(bucketForFrontend),
+        ),
+      },
+    );
 
     //Add api subdomain to Route53
-    const cNameApi = new route53.ARecord(this, 'apiUkrLublinlifeSubdomain', {
+    const cNameApi = new route53.ARecord(this, `${projectName}ApiDomain`, {
       zone: zone,
       recordName: subDomainNameApi,
       target: route53.RecordTarget.fromAlias(
@@ -286,8 +286,8 @@ export class MyStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'User deployer Name', {
       value: userDeploer.userName,
     });
-    new cdk.CfnOutput(this, 'tableGuidebook', {
-      value: zeroblogTable.table.tableName,
+    new cdk.CfnOutput(this, 'mainTableName', {
+      value: mainTable.table.tableName,
     });
     new cdk.CfnOutput(this, 'apiKeyId', {
       value: apiGatewayKey.keyId,

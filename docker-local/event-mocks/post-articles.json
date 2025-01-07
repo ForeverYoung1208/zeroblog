@@ -6,7 +6,7 @@
     "accept": "application/json",
     "accept-encoding": "gzip, deflate",
     "content-type": "application/json",
-    "Host": "api.ukr.lublin.life",
+    "Host": "api.blog.for-test.click",
     "User-Agent": "vscode-restclient",
     "X-Amzn-Trace-Id": "Root=1-67212a03-3dba1b9a6d04a7192ea3a3d3",
     "X-Forwarded-For": "213.134.169.205",
@@ -18,7 +18,7 @@
     "accept": ["application/json"],
     "accept-encoding": ["gzip, deflate"],
     "content-type": ["application/json"],
-    "Host": ["api.ukr.lublin.life"],
+    "Host": ["api.blog.for-test.click"],
     "User-Agent": ["vscode-restclient"],
     "X-Amzn-Trace-Id": ["Root=1-67212a03-3dba1b9a6d04a7192ea3a3d3"],
     "X-Forwarded-For": ["213.134.169.205"],
@@ -58,7 +58,7 @@
       "userAgent": "vscode-restclient",
       "user": null
     },
-    "domainName": "api.ukr.lublin.life",
+    "domainName": "api.blog.for-test.click",
     "deploymentId": "au65je",
     "apiId": "s21l7h9vn4"
   },

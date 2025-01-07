@@ -18,7 +18,7 @@ export function P1() {
     <Box>
       <button onClick={BackButtonHandler}>Back</button>
       <Box className="P1" style={{ fontSize: '40px' }}>
-        <h1>центри гуманітарної допомоги</h1>
+        <h1>Page1 content</h1>
         {articles.map((article) => (
           <Box>{article.name}</Box>
         ))}
