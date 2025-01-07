@@ -89,27 +89,41 @@ aws apigateway get-api-key --api-key <<key_id_from_cdk_deploy_output>> --include
 ```
 to get value of the generated key and remember it for further use as REACT_APP_APIGATEWAY_KEY
 
-## At the aws console IAM Security credentials, create credentials for UserdeployerName  (defuault it will be zeroblog-deployer)
+## At the aws console IAM Security credentials, create credentials for deployer user  (by defuault it will be `zeroblog-deployer`)
 
-This user is created with minimal permissions to deploy code.
+This user is created with minimal permissions to deploy code via github actions.
 Go to the aws console and create aws credentials for the user zeroblog-deployer (will be used as AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY).
-This user will be used at the Github Actions to deploy code.
 
-## set up github actions secrets and variables using created credentials
+## deploy code using github actions 
 
-set secrets
+set  github actions secrets and variables
 `REACT_APP_APIGATEWAY_KEY` - the key you've retrieved before with command `aws apigateway get-api-key --api-key <<key_id_from_cdk_deploy_output>> --include-value --query value --output text ` or at the aws API Gateway console 
 `AWS_ACCESS_KEY_ID` - key id for user zeroblog-deployer
 `AWS_SECRET_ACCESS_KEY` - secret key value for user zeroblog-deployer
 
 and variables
-`AWS_REGION` - the region where athe app will be deployed at
+`AWS_REGION` - the region where the app infrastructure is deployed
 `AWS_S3_BUCKET_NAME` - bucket name to deploy frontend. (Must be the same as 'subDomainNameFrontend' in infra/cdk/lib/const.ts) 
 `REACT_APP_API_URL` - url of the api (Must be like 'https://api.blog.for-test.click', use subDomainNameApi from infra/cdk/lib/const.ts)
 `LAMBDA_MAIN_API_ARN` - arn of the main lambda function (lambdaFnApiArn you've got from output before).
 `LAMBDA_LAYER_NAME` - arn of the main lambda function (LambdaLayerName you've got from output before)
 
 Now you can deploy api and frontend code by merging feature branches to the master branch leveraging github actions workflows
+
+## deploy code using aws cdk
+You still able to deploy code using cws cdk, for example to rebuild api and lambda layer containing node_modules (if you need to update packages) and redeploy all changes, do:
+
+bash at api/src/lambda-api
+```bash
+cd api/src/lambda-api
+npm run build
+npm run build:layer
+```
+bash at infra/cdk
+```bash
+npm run build
+cdk deploy
+```
 
 # USEFUL INFO
 ## get the list of  availabe aurora serverless DB engines
