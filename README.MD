@@ -75,14 +75,14 @@ cdk deploy --profile zeroblog
 ```
 then you'll see several output values. 
 
-Find value of ZeroblogStack.UserdeployerName and remember it (by defuault it will be zeroblog-
+Find value of ZeroblogStack.UserDeployerName and remember it (by defuault it will be zeroblog-
 deployer)
 
-Find value of ZeroblogStack.LambdaLayerName and remember it 
+Find value of ZeroblogStack.LambdaLayerArn and remember it 
 
-Find value of ZeroblogStack.lambdaFnApiArn and remember it (will be something like arn:aws:lambda:eu-central-1:652460108554:function:ZeroblogStack-lambdaFnApi0E02146C-fvY4vVZhKfH7)
+Find value of ZeroblogStack.LambdaFnApiArn and remember it (will be something like arn:aws:lambda:eu-central-1:652460108554:function:ZeroblogStack-lambdaFnApi0E02146C-fvY4vVZhKfH7)
 
-Find value of ZeroblogStack.apiKeyId and use this value in the command 
+Find value of ZeroblogStack.ApiKeyId and use this value in the command 
 
 ```bash
 aws apigateway get-api-key --api-key <<key_id_from_cdk_deploy_output>> --include-value --query value --output text
