@@ -109,6 +109,7 @@ jobs:
       - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
         name: Update function to use new layer
         run: |
+          cd api/lambdas/build_lambda_layer/
           LAYER_VERSION_ARN=$(aws lambda publish-layer-version --layer-name ${{vars.LAMBDA_LAYER_ARN}} --zip-file fileb://layer.zip --compatible-runtimes nodejs20.x --query 'LayerVersionArn' --output text)
           aws lambda update-function-configuration \
             --function-name ${{vars.LAMBDA_MAIN_API_ARN}} \
