@@ -136,6 +136,16 @@ export class MyStack extends cdk.Stack {
       compatibleRuntimes: [lambda.Runtime.NODEJS_20_X], // Adjust for your Node.js version
       description: 'Node modules layer',
     });
+    const layerArnParts = cdk.Fn.split(':', nodeModulesLayer.layerVersionArn);
+    const layerArnWithoutVersion = cdk.Fn.join(':', [
+      cdk.Fn.select(0, layerArnParts), // arn
+      cdk.Fn.select(1, layerArnParts), // aws
+      cdk.Fn.select(2, layerArnParts), // lambda
+      cdk.Fn.select(3, layerArnParts), // region
+      cdk.Fn.select(4, layerArnParts), // account
+      cdk.Fn.select(5, layerArnParts), // layer
+      cdk.Fn.select(6, layerArnParts), // layer-name
+    ]);
 
     // Lambda functions - main api
     const lambdaFnApi = new lambda.Function(this, `lambdaFnApi`, {
@@ -223,6 +233,11 @@ export class MyStack extends cdk.Stack {
             effect: iam.Effect.ALLOW,
             resources: [lambdaFnApi.functionArn],
           }),
+          new iam.PolicyStatement({
+            actions: ['lambda:PublishLayerVersion'],
+            effect: iam.Effect.ALLOW,
+            resources: [layerArnWithoutVersion],
+          }),
         ],
       }),
     );
@@ -285,25 +300,28 @@ export class MyStack extends cdk.Stack {
      *  Output
      */
 
-    new cdk.CfnOutput(this, 'Bucket Url', {
+    new cdk.CfnOutput(this, 'BucketUrl', {
       value: bucketForFrontend.bucketWebsiteUrl,
     });
-    new cdk.CfnOutput(this, 'Bucket Name For Frontend', {
+    new cdk.CfnOutput(this, 'BucketNameForFrontend', {
       value: bucketForFrontend.bucketName,
     });
-    new cdk.CfnOutput(this, 'lambdaFnApi Arn', {
+    new cdk.CfnOutput(this, 'LambdaFnApiArn', {
       value: lambdaFnApi.functionArn,
     });
-    new cdk.CfnOutput(this, 'Lambda Layer Name', {
-      value: nodeModulesLayer.layerVersionArn,
+
+    console.log(layerArnWithoutVersion);
+    new cdk.CfnOutput(this, 'LambdaLayerArn', {
+      value: layerArnWithoutVersion,
     });
-    new cdk.CfnOutput(this, 'User deployer Name', {
+
+    new cdk.CfnOutput(this, 'UserDeployerName', {
       value: userDeploer.userName,
     });
-    new cdk.CfnOutput(this, 'mainTableName', {
+    new cdk.CfnOutput(this, 'MainTableName', {
       value: mainTable.table.tableName,
     });
-    new cdk.CfnOutput(this, 'apiKeyId', {
+    new cdk.CfnOutput(this, 'ApiKeyId', {
       value: apiGatewayKey.keyId,
     });
   }
