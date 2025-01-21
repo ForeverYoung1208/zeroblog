@@ -234,6 +234,16 @@ export class MyStack extends cdk.Stack {
             resources: [lambdaFnApi.functionArn],
           }),
           new iam.PolicyStatement({
+            actions: ['lambda:UpdateFunctionConfiguration'],
+            effect: iam.Effect.ALLOW,
+            resources: [lambdaFnApi.functionArn],
+          }),
+          new iam.PolicyStatement({
+            actions: ['lambda:GetLayerVersion'],
+            effect: iam.Effect.ALLOW,
+            resources: [`${layerArnWithoutVersion}:*`],
+          }),
+          new iam.PolicyStatement({
             actions: ['lambda:PublishLayerVersion'],
             effect: iam.Effect.ALLOW,
             resources: [layerArnWithoutVersion],
