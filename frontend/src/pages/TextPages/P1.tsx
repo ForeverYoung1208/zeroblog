@@ -20,7 +20,9 @@ export function P1() {
       <Box className="P1" style={{ fontSize: '40px' }}>
         <h1>Page1 content</h1>
         {articles.map((article) => (
-          <Box>{article.name}</Box>
+          <Box key={article.id}>
+            {article.name}: {article.content}
+          </Box>
         ))}
       </Box>
     </Box>
