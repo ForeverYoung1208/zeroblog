@@ -65,7 +65,7 @@ api.post('/articles', async (req: Request, res: Response) => {
   const article = new Article();
   Object.assign(article, { content, name, section, status });
   const result = await dbConnection.entityManager.create(article);
-  res.status(200).send(result);
+  res.status(201).send(result);
 });
 
 api.get('/articles', async (req: Request, res: Response) => {
