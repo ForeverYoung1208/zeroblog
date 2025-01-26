@@ -1,6 +1,6 @@
 import{ Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-import { getArticles } from '../../services/articlesService';
+import { ArticlesService } from '../../services/articlesService';
 import { useEffect, useState } from 'react';
 import { Article } from '../../types/Article';
 export function P1() {
@@ -11,7 +11,10 @@ export function P1() {
   }
 
   useEffect(() => {
-    getArticles().then((gotArticles) => setArticles(gotArticles));
+    const articlesService = new ArticlesService(); // TODO: move to context or other global
+    articlesService
+      .getArticles()
+      .then((gotArticles) => setArticles(gotArticles));
   }, []);
 
   return (

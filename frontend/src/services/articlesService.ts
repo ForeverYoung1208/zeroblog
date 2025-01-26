@@ -1,27 +1,47 @@
 import { Article } from '../types/Article';
 
-export const getArticles = async () => {
-  const key = process.env.REACT_APP_APIGATEWAY_KEY;
-  const apiUrl = process.env.REACT_APP_API_URL;
-  if (!key || !apiUrl) {
-    throw new Error('api key or url not found');
+export class ArticlesService {
+  private init: RequestInit = {};
+  private apiUrl: string = '';
+  private key: string = '';
+
+  constructor() {
+    this.apiUrl = process.env.REACT_APP_API_URL || '';
+    this.key = process.env.REACT_APP_APIGATEWAY_KEY || '';
+    if (!this.key || !this.apiUrl) {
+      throw new Error('api key or url not found');
+    }
+    this.init = {
+      headers: {
+        'x-api-key': this.key,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Origin: window.location.origin,
+      },
+    };
   }
 
-  const init: RequestInit = {
-    method: 'GET',
-    headers: {
-      'x-api-key': key,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Origin': window.location.origin,      
-    },
+  getArticles = async () => {
+    const response = await fetch(`${this.apiUrl}/articles`, {
+      ...this.init,
+      method: 'GET',
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = (await response.json()).items as Article[];
+    return json;
   };
-  const response = await fetch(`${apiUrl}/articles`, init);
-  if (!response.ok) {
-    throw new Error(`Response status: ${response.status}`);
-  }
 
-  const json = (await response.json()).items as Article[];
+  postArticle = async (data: Article) => {
+    const response = await fetch(`${this.apiUrl}/articles`, {
+      ...this.init,
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
 
-  return json;
-};
+    if (response.status !== 201) {
+      throw new Error(`Response status is bad (not 201): ${response.status}`);
+    }
+  };
+}
