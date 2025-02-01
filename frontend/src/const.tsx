@@ -9,7 +9,7 @@ export const pagesPathsAndNames = [
   },
   {
     path: '/P3',
-    linkText: 'Link to Page3',
+    linkText: 'Link to Page3 - Add Sections (POST)',
   },
   {
     path: '/P4',

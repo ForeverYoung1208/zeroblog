@@ -1,8 +1,9 @@
-import { Box, Button, Input } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { Box, Button, Input, MenuItem, Select } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArticlesService } from '../../services/articlesService';
-import { Article } from '../../types/Article';
+import { TSection } from '../../types/Section';
+import { SectionsService } from '../../services/sectionsService';
 export function P2() {
   const redir = useNavigate();
   function BackButtonHandler() {
@@ -11,25 +12,27 @@ export function P2() {
 
   const [articleName, setArticleName] = useState<string>('');
   const [articleContent, setArticleContent] = useState<string>('');
-  const handleSave = useCallback(async (name?: string, content?: string) => {
-    if (!name || !content) {
-      console.error('Mandatory value not set');
-      return;
-    }
-    const articlesService = new ArticlesService(); // TODO: move to context or other global
-    const defaultArticleData: Article = {
-      section: 'defaultSection',
-      content: 'no content',
-      name: 'no name',
-      status: 'draft',
-    };
-    await articlesService.postArticle({
-      ...defaultArticleData,
-      name,
-      content,
-    });
-    setArticleContent('');
-    setArticleName('');
+  const [sectionId, setSectionId] = useState<string>('');
+  const [sections, setSections] = useState<Array<TSection>>([]);
+
+  const handleSave = useCallback(
+    async (name: string, content: string, sectionId: string) => {
+      if (!name || !content || !sectionId) {
+        console.error('Mandatory value not set');
+        return;
+      }
+      const articlesService = new ArticlesService(); // TODO: move to context or other global
+      const article = articlesService.prepare({ name, content, sectionId });
+      await articlesService.post(article);
+      setArticleContent('');
+      setArticleName('');
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const sectionsService = new SectionsService(); // TODO: move to context or other global
+    sectionsService.get().then((gotSections) => setSections(gotSections));
   }, []);
 
   return (
@@ -39,14 +42,30 @@ export function P2() {
         <h1>Page2 content</h1>
       </Box>
       <Box>
-        Name:{' '}
+        Section:{' '}
+        <Select
+          onChange={(e) => {
+            console.log(e.target.value);
+            setSectionId(e.target.value);
+          }}
+          value={sectionId}
+        >
+          {sections.map((section) => (
+            <MenuItem key={section.id} value={section.id}>
+              {section.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
+      <Box>
+        Article Name:{' '}
         <Input
           onChange={(e) => setArticleName(e.target.value)}
           value={articleName}
         ></Input>
       </Box>
       <Box>
-        Content:{' '}
+        Article Content:{' '}
         <Input
           onChange={(e) => setArticleContent(e.target.value)}
           value={articleContent}
@@ -55,7 +74,7 @@ export function P2() {
       <Box>
         <Button
           variant="contained"
-          onClick={() => handleSave(articleName, articleContent)}
+          onClick={() => handleSave(articleName, articleContent, sectionId)}
         >
           Save
         </Button>
