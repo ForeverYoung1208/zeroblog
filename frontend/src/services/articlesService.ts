@@ -1,27 +1,8 @@
-import { Article } from '../types/Article';
+import { TArticle } from '../types/Article';
+import { BaseService } from './baseService';
 
-export class ArticlesService {
-  private init: RequestInit = {};
-  private apiUrl: string = '';
-  private key: string = '';
-
-  constructor() {
-    this.apiUrl = process.env.REACT_APP_API_URL || '';
-    this.key = process.env.REACT_APP_APIGATEWAY_KEY || '';
-    if (!this.key || !this.apiUrl) {
-      throw new Error('api key or url not found');
-    }
-    this.init = {
-      headers: {
-        'x-api-key': this.key,
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Origin: window.location.origin,
-      },
-    };
-  }
-
-  getArticles = async () => {
+export class ArticlesService extends BaseService<TArticle> {
+  get = async () => {
     const response = await fetch(`${this.apiUrl}/articles`, {
       ...this.init,
       method: 'GET',
@@ -29,11 +10,11 @@ export class ArticlesService {
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
-    const json = (await response.json()).items as Article[];
+    const json = (await response.json()).items as TArticle[];
     return json;
   };
 
-  postArticle = async (data: Article) => {
+  post = async (data: TArticle) => {
     const response = await fetch(`${this.apiUrl}/articles`, {
       ...this.init,
       method: 'POST',
@@ -44,4 +25,17 @@ export class ArticlesService {
       throw new Error(`Response status is bad (not 201): ${response.status}`);
     }
   };
+
+  prepare(data: Partial<TArticle>): TArticle {
+    const defaultArticleData: TArticle = {
+      sectionId: 'defaultSectionId',
+      content: 'no content',
+      name: 'no name',
+      status: 'draft',
+    };
+    return {
+      ...defaultArticleData,
+      ...data,
+    };
+  }
 }

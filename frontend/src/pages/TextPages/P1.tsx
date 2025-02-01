@@ -2,9 +2,9 @@ import{ Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import { ArticlesService } from '../../services/articlesService';
 import { useEffect, useState } from 'react';
-import { Article } from '../../types/Article';
+import { TArticle } from '../../types/Article';
 export function P1() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<TArticle[]>([]);
   const redir = useNavigate();
   function BackButtonHandler() {
     redir(-1);
@@ -12,9 +12,7 @@ export function P1() {
 
   useEffect(() => {
     const articlesService = new ArticlesService(); // TODO: move to context or other global
-    articlesService
-      .getArticles()
-      .then((gotArticles) => setArticles(gotArticles));
+    articlesService.get().then((gotArticles) => setArticles(gotArticles));
   }, []);
 
   return (
@@ -24,7 +22,7 @@ export function P1() {
         <h1>Page1 content</h1>
         {articles.map((article) => (
           <Box key={article.id}>
-            {article.name}: {article.content}
+            {article.name}: {article.content} : {article.sectionId}
           </Box>
         ))}
       </Box>
