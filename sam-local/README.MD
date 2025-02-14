@@ -1,6 +1,10 @@
 # The purpose of sam-local is to start start the Lambda function locally.
 
-first, make sure dynamodb service is up and running (`docker ps` should contatin gd_db listenting to port 8000) If not, see ../docker-local/README.MD how to start it
+## first, install sam-cli according to instructions at
+
+https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
+
+second,make sure dynamodb service is up and running (`docker ps` should contatin gd_db listenting to port 8000) If not, see ../docker-local/README.MD how to start it
 
 
 ## Using sam local start-api - Since template has an API event, this command would be more appropriate as it starts a local API Gateway endpoint:
