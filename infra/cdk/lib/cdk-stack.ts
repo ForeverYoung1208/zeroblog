@@ -113,11 +113,6 @@ export class MyStack extends cdk.Stack {
         'service-role/AWSLambdaBasicExecutionRole',
       ),
     );
-    lambdaCommonRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName(
-        'service-role/AWSLambdaVPCAccessExecutionRole',
-      ),
-    );
     lambdaCommonRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
