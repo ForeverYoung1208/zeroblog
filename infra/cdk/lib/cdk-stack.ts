@@ -32,20 +32,6 @@ export class MyStack extends cdk.Stack {
       userName: userDeploerName,
     });
 
-    // Create a secret. Used before to store API key - now it is not needed (rely on api gateway key)
-    // Leave as example how to store any other secrets as json when needed.
-    const appSecrets = new secretsmanager.Secret(this, 'SomeSecretExample', {
-      secretName: `${projectName}Sectrests`,
-      description: `Secrets for ${projectName}`,
-      generateSecretString: {
-        secretStringTemplate: JSON.stringify({}),
-        passwordLength: 40,
-        generateStringKey: 'someSecretStoringExample',
-        excludePunctuation: true,
-        includeSpace: false,
-      },
-    });
-
     /**
      *  FRONTEND
      */
@@ -113,13 +99,6 @@ export class MyStack extends cdk.Stack {
         'service-role/AWSLambdaBasicExecutionRole',
       ),
     );
-    lambdaCommonRole.addToPolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['secretsmanager:GetSecretValue'],
-        resources: [appSecrets.secretArn],
-      }),
-    );
 
     // Create a layer for node_modules
     const nodeModulesLayer = new lambda.LayerVersion(this, 'NodeModulesLayer', {
@@ -148,7 +127,6 @@ export class MyStack extends cdk.Stack {
       role: lambdaCommonRole,
       environment: {
         MAIN_TABLE_NAME: mainTable.table.tableName,
-        SECRETS_ARN: appSecrets.secretArn,
       },
     });
 
