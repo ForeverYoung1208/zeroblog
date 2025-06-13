@@ -1,6 +1,6 @@
 import { Section } from '../../entities/section.entity';
 import { BaseService } from '../baseService';
-import { CreateSectionDto } from './dto/section.dto';
+import { CreateSectionDto } from 'dto-lib';
 
 export class SectionsService extends BaseService {
   async create(sectionDto: CreateSectionDto): Promise<Section> {

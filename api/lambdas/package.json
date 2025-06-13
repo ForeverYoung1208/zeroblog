@@ -30,6 +30,7 @@
     "aws-lambda": "^1.0.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dto-lib": "github:ForeverYoung1208/dto-lib#master",
     "lambda-api": "^1.1.0",
     "source-map-support": "^0.5.21"
   }
