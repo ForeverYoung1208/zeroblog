@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { ArticlesService } from '../../services/articlesService';
 import { TSection } from '../../types/Section';
 import { SectionsService } from '../../services/sectionsService';
-export function P2() {
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { CreateArticleDto } from '../../services/dto/article.dto';
+export function AddArticle() {
   const redir = useNavigate();
   function BackButtonHandler() {
     redir(-1);
@@ -22,6 +25,13 @@ export function P2() {
         return;
       }
       const articlesService = new ArticlesService(); // TODO: move to context or other global
+      const articlesServiceDto = plainToInstance(CreateArticleDto, { name, content, sectionId })
+      const validationErrors = await validate(articlesServiceDto);
+      if (validationErrors.length > 0) {
+        console.error('Validation errors:', validationErrors);
+        return;
+      }
+      
       const article = articlesService.prepare({ name, content, sectionId });
       await articlesService.post(article);
       setArticleContent('');

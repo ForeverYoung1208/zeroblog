@@ -5,11 +5,11 @@ import { Section } from '../../../entities/section.entity';
 export class CreateSectionDto implements Partial<Section> {
   @Expose()
   @IsString()
-  @MinLength(1)
+  @MinLength(3)
   name: string;
 
   @Expose()
   @IsString()
-  @MinLength(1)
+  @MinLength(3)
   status: string;
 }

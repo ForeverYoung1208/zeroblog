@@ -1,14 +1,14 @@
 export const pagesPathsAndNames = [
   {
-    path: '/P1',
+    path: '/show-articles',
     linkText: 'Link to Page1 - Show articles (GET)',
   },
   {
-    path: '/P2',
+    path: '/add-article',
     linkText: 'Link to Page2 - Add articles (POST)',
   },
   {
-    path: '/P3',
+    path: '/add-sections',
     linkText: 'Link to Page3 - Add Sections (POST)',
   },
   {
