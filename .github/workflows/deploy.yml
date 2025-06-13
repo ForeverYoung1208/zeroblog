@@ -93,9 +93,10 @@ jobs:
       - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
         name: Deploy lambda main api
         run: |
-          cd api/lambdas/build/lambda-api/
-          zip -r lambda-main-api.zip . -i '*.js'
-          aws lambda update-function-code --function-name ${{vars.LAMBDA_MAIN_API_ARN}} --zip-file fileb://lambda-main-api.zip
+          npm install -g aws-cdk
+          cd api/infra/cdk
+          npm ci
+          cdk deploy --hotswap --require-approval never
 
       - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
         name: Deploy lambda layer
