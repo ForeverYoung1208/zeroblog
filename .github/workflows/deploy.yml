@@ -54,6 +54,7 @@ jobs:
 
   deploy-api:
     if: github.event.pull_request.merged
+    needs: deploy-frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -90,6 +91,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{vars.AWS_REGION}}
 
+      # cdk deploy uses whole stack so we must prepare also forntend here (fetch form cache)
+      - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
+        name: Download frontend artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: frontend/
+          key: ${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*') }}
+          fail-on-cache-miss: true
+    
       - if: ${{ steps.cache-api.outputs.cache-hit != 'true' }}
         name: Deploy lambda main api
         run: |
