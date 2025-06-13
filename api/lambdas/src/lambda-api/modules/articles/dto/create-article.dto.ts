@@ -2,10 +2,10 @@ import { Expose } from 'class-transformer';
 import { IsOptional, IsString, MinLength } from 'class-validator';
 import { Article } from '../../../entities/article.entity';
 
-export class CreateArticleDto implements Partial<Article> {
+export class CreateArticleDto {
   @Expose()
   @IsString()
-  @MinLength(1)
+  @MinLength(4)
   name: string;
 
   @Expose()
@@ -15,7 +15,7 @@ export class CreateArticleDto implements Partial<Article> {
 
   @Expose()
   @IsString()
-  @MinLength(1)
+  @MinLength(4)
   content: string;
 
   @Expose()

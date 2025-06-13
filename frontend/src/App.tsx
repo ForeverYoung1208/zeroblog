@@ -1,6 +1,6 @@
-import { P1 } from './pages/TextPages/P1';
-import { P2 } from './pages/TextPages/P2';
-import { P3 } from './pages/TextPages/P3';
+import { ShowArticles } from './pages/TextPages/ShowArticles';
+import { AddArticle } from './pages/TextPages/AddArticle';
+import { AddSection } from './pages/TextPages/AddSection';
 import { P4 } from './pages/TextPages/P4';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -9,6 +9,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import { pagesPathsAndNames } from './const';
 import { PhoneLayout } from './layouts/PhoneLayout/PhoneLayout';
 import { DesktopLayout } from './layouts/DesktopLayout/DesktopLayout';
+import 'reflect-metadata';
 
 const App = () => {
   const isDesktopOrLaptop = useMediaQuery('(min-width: 1224px)');
@@ -28,9 +29,9 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path={pagesPathsAndNames[0].path} element={<P1 />} />
-        <Route path={pagesPathsAndNames[1].path} element={<P2 />} />
-        <Route path={pagesPathsAndNames[2].path} element={<P3 />} />
+        <Route path={pagesPathsAndNames[0].path} element={<ShowArticles />} />
+        <Route path={pagesPathsAndNames[1].path} element={<AddArticle />} />
+        <Route path={pagesPathsAndNames[2].path} element={<AddSection />} />
         <Route path={pagesPathsAndNames[3].path} element={<P4 />} />
       </Routes>
     </Router>

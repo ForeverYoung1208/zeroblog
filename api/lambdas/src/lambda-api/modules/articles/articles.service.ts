@@ -1,7 +1,7 @@
 import { DocumentClientTypes } from '@typedorm/document-client';
 import { Article } from '../../entities/article.entity';
 import { BaseService } from '../baseService';
-import { CreateArticleDto } from './dto/article.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 export type TListResponce<T> = {
   items: Array<T>;

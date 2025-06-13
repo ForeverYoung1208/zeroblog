@@ -32,10 +32,14 @@ sam local start-api --docker-network gb_default --warm-containers EAGER --debug-
 ```
 But Remember to only add the --debug-port parameter when you actually need to debug your code, as it will always cause the execution to pause until a debugger is attached.
 
-
-
-## Note!
+## Note
 
 Remember that template includes environment variables for local testing, including DynamoDB endpoint configuration. Make sure local DynamoDB container (gb_db) is running since your template references it at http://gb_db:8000. If not, see ../docker-local/README.MD how to start it
 
-If you make any changes to your Lambda function code, you'll need to run sam build again before starting the local server.
+## Note! !!!!!!!!!!! ATTENTION !!!!!!!!!!!
+
+If you make any changes to your Lambda function code, you'll need to 
+1. build your function first (`npm run build` in the api/lambdas folder )
+2. run `sam build` in the sam-local folder !!!
+
+Yes, you need separately build function code and then run `sam build`.
