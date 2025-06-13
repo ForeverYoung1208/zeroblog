@@ -197,7 +197,7 @@ export class MyStack extends cdk.Stack {
             ],
           }),
           new iam.PolicyStatement({
-            actions: ['lambda:UpdateFunctionCode'],
+            actions: ['lambda:UpdateFunctionCode', 'lambda:GetFunction'],
             effect: iam.Effect.ALLOW,
             resources: [lambdaFnApi.functionArn],
           }),
@@ -207,9 +207,14 @@ export class MyStack extends cdk.Stack {
             resources: [lambdaFnApi.functionArn],
           }),
           new iam.PolicyStatement({
-            actions: ['lambda:InvokeFunction'],
+            actions: [
+              'lambda:InvokeFunction',
+              'lambda:GetFunction'
+            ],
             effect: iam.Effect.ALLOW,
-            resources: [`arn:aws:lambda:${this.region}:${this.account}:function:${this.stackName}-*`],
+            resources: [
+              `arn:aws:lambda:${this.region}:${this.account}:function:${this.stackName}-*`,
+            ],
           }),
           new iam.PolicyStatement({
             actions: ['lambda:GetLayerVersion'],
