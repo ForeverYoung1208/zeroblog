@@ -6,7 +6,8 @@ import { TSection } from '../../types/Section';
 import { SectionsService } from '../../services/sectionsService';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreateArticleDto } from '../../services/dto/article.dto';
+import { CreateArticleDto} from 'dto-lib';
+
 export function AddArticle() {
   const redir = useNavigate();
   function BackButtonHandler() {
@@ -25,11 +26,13 @@ export function AddArticle() {
         return;
       }
       const articlesService = new ArticlesService(); // TODO: move to context or other global
-      const articlesServiceDto = plainToInstance(CreateArticleDto, { name, content, sectionId })
-      const validationErrors = await validate(articlesServiceDto);
+      const createArticleDto = plainToInstance(CreateArticleDto, { name, content, sectionId })
+      const validationErrors = await validate(createArticleDto, { groups: ['FE'] });
+      
+      
       if (validationErrors.length > 0) {
-        console.error('Validation errors:', validationErrors);
-        return;
+        console.error('Local validation errors:', validationErrors);
+        // return;
       }
       
       const article = articlesService.prepare({ name, content, sectionId });

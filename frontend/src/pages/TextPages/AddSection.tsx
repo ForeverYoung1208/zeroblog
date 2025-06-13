@@ -2,6 +2,11 @@ import { Box, Button, Input } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SectionsService } from '../../services/sectionsService';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { CreateSectionDto } from 'dto-lib';
+
+
 export function AddSection() {
   const redir = useNavigate();
   function BackButtonHandler() {
@@ -17,6 +22,14 @@ export function AddSection() {
       return;
     }
     const sectionsService = new SectionsService(); // TODO: move to context or other global
+    
+    const createServiceDto = plainToInstance(CreateSectionDto, { name, status })
+    const validationErrors = await validate(createServiceDto, { groups: ['FE'] });
+    if (validationErrors.length > 0) {
+      console.error('Local validation errors:', validationErrors);
+      // return;
+    }    
+
     const section = sectionsService.prepare({ name, status });
     await sectionsService.post(section);
     setSectionStatus('');

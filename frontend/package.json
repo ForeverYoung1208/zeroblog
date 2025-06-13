@@ -16,6 +16,7 @@
     "@types/react-dom": "^18.3.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "dto-lib": "github:ForeverYoung1208/dto-lib#master",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",

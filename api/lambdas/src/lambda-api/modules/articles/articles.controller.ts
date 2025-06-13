@@ -3,7 +3,7 @@ import { BaseController } from '../baseController';
 import { TControllerParams } from '../controllerParams.type';
 import { ArticlesService } from './articles.service';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-import { CreateArticleDto } from './dto/create-article.dto';
+import { CreateArticleDto } from 'dto-lib';
 import { validateOrReject } from 'class-validator';
 
 export class ArticlesController extends BaseController {
