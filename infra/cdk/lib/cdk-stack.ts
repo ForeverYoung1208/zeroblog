@@ -207,6 +207,11 @@ export class MyStack extends cdk.Stack {
             resources: [lambdaFnApi.functionArn],
           }),
           new iam.PolicyStatement({
+            actions: ['lambda:InvokeFunction'],
+            effect: iam.Effect.ALLOW,
+            resources: [`arn:aws:lambda:${this.region}:${this.account}:function:${this.stackName}-*`],
+          }),
+          new iam.PolicyStatement({
             actions: ['lambda:GetLayerVersion'],
             effect: iam.Effect.ALLOW,
             resources: [`${layerArnWithoutVersion}:*`],
@@ -215,6 +220,58 @@ export class MyStack extends cdk.Stack {
             actions: ['lambda:PublishLayerVersion'],
             effect: iam.Effect.ALLOW,
             resources: [layerArnWithoutVersion],
+          }),
+          new iam.PolicyStatement({
+            actions: ['ssm:GetParameter'],
+            effect: iam.Effect.ALLOW,
+            resources: [
+              `arn:aws:ssm:${this.region}:${this.account}:parameter/${projectName}*`,
+            ],
+          }),
+          new iam.PolicyStatement({
+            actions: [
+              'cloudformation:DescribeStacks',
+              'cloudformation:GetTemplate',
+              'cloudformation:DescribeStackEvents',
+              'cloudformation:DescribeStackResources',
+              'cloudformation:ListStackResources',
+              'cloudformation:ListStacks',
+              'cloudformation:ValidateTemplate',
+            ],
+            effect: iam.Effect.ALLOW,
+            resources: ['*'],
+          }),
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: [
+              'cloudformation:CreateStack',
+              'cloudformation:UpdateStack',
+              'cloudformation:DeleteStack',
+              'cloudformation:CreateChangeSet',
+              'cloudformation:ExecuteChangeSet',
+              'cloudformation:DeleteChangeSet',
+              'cloudformation:SetStackPolicy',
+            ],
+            resources: [
+              `arn:aws:cloudformation:${this.region}:${this.account}:stack/${this.stackName}/*`,
+              `arn:aws:cloudformation:${this.region}:${this.account}:stack/CDK*/*`,
+            ],
+          }),
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ['s3:*'],
+            resources: [
+              `arn:aws:s3:::cdk-hnb659fds-assets-${this.account}-${this.region}`,
+              `arn:aws:s3:::cdk-hnb659fds-assets-${this.account}-${this.region}/*`,
+            ],
+          }),
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ['iam:PassRole', 'sts:AssumeRole'],
+            resources: [
+              `arn:aws:iam::${this.account}:role/cdk-hnb659fds-deploy-role-${this.account}-${this.region}`,
+              `arn:aws:iam::${this.account}:role/cdk-hnb659fds-file-publishing-role-${this.account}-${this.region}`,
+            ],
           }),
         ],
       }),
