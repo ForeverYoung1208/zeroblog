@@ -10,8 +10,10 @@ export class SectionsService extends BaseService<TSection> {
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
-    const json = (await response.json()).items as TSection[];
-    return json;
+    console.log(response);
+    const sections = (await response.json()).items as TSection[];
+    console.log(sections);
+    return sections;
   };
 
   post = async (data: TSection) => {
