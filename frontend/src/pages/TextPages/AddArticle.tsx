@@ -21,20 +21,22 @@ export function AddArticle() {
 
   const handleSave = useCallback(
     async (name: string, content: string, sectionId: string) => {
-      if (!name || !content || !sectionId) {
-        console.error('Mandatory value not set');
-        return;
-      }
       const articlesService = new ArticlesService(); // TODO: move to context or other global
-      const createArticleDto = plainToInstance(CreateArticleDto, { name, content, sectionId })
-      const validationErrors = await validate(createArticleDto, { groups: ['FE'] });
-      
-      
+
+      const createArticleDto = plainToInstance(CreateArticleDto, {
+        name,
+        content,
+        sectionId,
+      });
+      const validationErrors = await validate(createArticleDto, {
+        groups: ['FE'],
+      });
+
       if (validationErrors.length > 0) {
         console.error('Local validation errors:', validationErrors);
         // return;
       }
-      
+
       const article = articlesService.prepare({ name, content, sectionId });
       await articlesService.post(article);
       setArticleContent('');
