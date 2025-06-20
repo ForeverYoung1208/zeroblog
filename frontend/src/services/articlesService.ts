@@ -35,7 +35,7 @@ export class ArticlesService extends BaseService<TArticle> {
       sectionId: 'defaultSectionId',
       content: 'no content',
       name: 'no name',
-      status: '',
+      status: 'ready',
     };
     return {
       ...defaultArticleData,

@@ -17,18 +17,19 @@ export function AddSection() {
   const [sectionStatus, setSectionStatus] = useState<string>('');
 
   const handleSave = useCallback(async (name?: string, status?: string) => {
-    if (!name || !status) {
-      console.error('Mandatory value not set');
-      return;
-    }
     const sectionsService = new SectionsService(); // TODO: move to context or other global
-    
-    const createServiceDto = plainToInstance(CreateSectionDto, { name, status })
-    const validationErrors = await validate(createServiceDto, { groups: ['FE'] });
+
+    const createServiceDto = plainToInstance(CreateSectionDto, {
+      name,
+      status,
+    });
+    const validationErrors = await validate(createServiceDto, {
+      groups: ['FE'],
+    });
     if (validationErrors.length > 0) {
       console.error('Local validation errors:', validationErrors);
       // return;
-    }    
+    }
 
     const section = sectionsService.prepare({ name, status });
     await sectionsService.post(section);
